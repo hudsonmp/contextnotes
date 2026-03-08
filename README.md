@@ -34,10 +34,20 @@ contextnotes/
 │   ├── examples/            # Example trace files
 │   ├── supabase-migrations/ # Database schema
 │   └── DESIGN.md            # Design rationale linked to literature
-├── capture/                 # Data capture (v2)
-├── recognition/             # Context-aware OCR (v2)
-├── trace/                   # Storage + viewer (v2)
-└── analysis/                # Thought progression analysis (v2)
+├── capture/                 # Data capture
+│   ├── chrome_capture.js    # Reading context via JS injection
+│   ├── goodnotes_screen_capture.py  # Screen diff for new ink
+│   ├── session_coordinator.py       # Orchestrates all streams
+│   └── gaze/                # WebGazer.js + relay server
+├── recognition/             # Context-aware OCR
+│   └── context_corrector.py # Claude Vision + article context
+├── trace/                   # Storage layer
+│   ├── models.py            # Pydantic models
+│   └── store.py             # Supabase CRUD
+├── analysis/                # Post-session analysis
+│   └── thought_progression.py
+├── cli.py                   # CLI entry point
+└── requirements.txt
 ```
 
 ## Architecture
@@ -74,16 +84,45 @@ The core innovation: use the article being read as context for recognizing handw
 
 Grounded in: Do et al. (2024) reference-based correction, Cai et al. (2022) context-aware abbreviation expansion, Greif et al. (2025) multimodal LLM post-correction.
 
+## Quick Start
+
+```bash
+# Install
+pip install -r requirements.txt
+
+# Configure
+cp .env.example .env  # Add your Supabase URL + key
+
+# Start a capture session
+python cli.py start --url "https://arxiv.org/abs/2205.03767" --title "Cai et al. 2022"
+
+# List sessions
+python cli.py list
+
+# Analyze a completed session
+python cli.py analyze <session-id>
+
+# Export trace as JSON
+python cli.py export <session-id> -o trace.json
+```
+
+For gaze tracking, open `capture/gaze/webgazer_page.html` in Chrome and start the relay server:
+```bash
+python -m capture.gaze.relay_server --port 8765
+```
+
 ## Status
 
 - [x] Literature review (3 reviews, ~70 papers)
 - [x] Learning trace schema (JSON Schema + Supabase migrations)
-- [ ] Chrome reading context capture
-- [ ] GoodNotes screen capture + frame diff
-- [ ] Context-aware OCR pipeline
-- [ ] WebGazer.js gaze integration
-- [ ] Trace viewer
-- [ ] Thought progression analysis
+- [x] Chrome reading context capture (JS injection via claude-in-chrome MCP)
+- [x] GoodNotes screen capture + frame diff
+- [x] Context-aware OCR pipeline (Claude Vision + article context)
+- [x] WebGazer.js gaze integration (calibration page + relay server)
+- [x] Supabase backend (sessions, events, gaze, captures, analytics)
+- [x] CLI (start/list/analyze/export)
+- [x] Thought progression analysis (Claude API)
+- [ ] Trace viewer (playback UI)
 
 ## License
 
