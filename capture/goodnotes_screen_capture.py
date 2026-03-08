@@ -5,6 +5,13 @@ to detect new ink, and triggers OCR on changed regions.
 
 Uses macOS `screencapture` CLI for window-level capture and PIL/numpy
 for image differencing.
+
+PERMISSION NOTE:
+  macOS requires Screen Recording permission for the process calling
+  `screencapture`. Grant this in:
+    System Settings > Privacy & Security > Screen Recording
+  Add your terminal app (Terminal.app, iTerm, etc.) to the list.
+  The screen-capture MCP server may already have this permission.
 """
 
 from __future__ import annotations
