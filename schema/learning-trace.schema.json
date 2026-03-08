@@ -1,0 +1,452 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/hudsonmp/contextnotes/schema/learning-trace.schema.json",
+  "title": "ContextNotes Learning Trace",
+  "description": "A multimodal learning trace capturing reading context, handwritten annotations, gaze data, and thought progression during a reading + note-taking session.",
+  "type": "object",
+  "required": ["session", "events"],
+  "properties": {
+    "session": {
+      "$ref": "#/$defs/Session"
+    },
+    "events": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/Event"
+      },
+      "description": "Chronologically ordered behavioral events (Layer 1)"
+    },
+    "gaze_stream": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/GazeSample"
+      },
+      "description": "Time-series gaze + scroll data (Layer 2). May be stored separately in Parquet for large sessions."
+    },
+    "screen_captures": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/ScreenCapture"
+      },
+      "description": "GoodNotes screen capture diffs (Layer 2)"
+    },
+    "analytics": {
+      "oneOf": [
+        {"$ref": "#/$defs/SessionAnalytics"},
+        {"type": "null"}
+      ],
+      "description": "Derived analytics computed post-session (Layer 3). Null before analysis is run."
+    }
+  },
+  "$defs": {
+    "Session": {
+      "type": "object",
+      "required": ["id", "started_at", "article_url"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "started_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "ended_at": {
+          "type": ["string", "null"],
+          "format": "date-time"
+        },
+        "article_url": {
+          "type": "string",
+          "format": "uri"
+        },
+        "article_title": {
+          "type": "string"
+        },
+        "notebook_name": {
+          "type": "string",
+          "description": "GoodNotes notebook being used for annotations"
+        },
+        "status": {
+          "type": "string",
+          "enum": ["active", "paused", "completed"]
+        }
+      }
+    },
+    "Event": {
+      "type": "object",
+      "required": ["id", "session_id", "timestamp", "event_type"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "session_id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "timestamp": {
+          "type": "string",
+          "format": "date-time",
+          "description": "ISO 8601 with millisecond precision"
+        },
+        "event_type": {
+          "type": "string",
+          "enum": [
+            "reading.scroll",
+            "reading.focus_paragraph",
+            "reading.selection",
+            "reading.navigate",
+            "annotation.create",
+            "annotation.update",
+            "gaze.fixation",
+            "session.start",
+            "session.pause",
+            "session.resume",
+            "session.end"
+          ]
+        },
+        "source": {
+          "$ref": "#/$defs/ReadingSource",
+          "description": "Reading context at the time of this event"
+        },
+        "annotation": {
+          "$ref": "#/$defs/Annotation",
+          "description": "Present only for annotation.* events"
+        }
+      }
+    },
+    "ReadingSource": {
+      "type": "object",
+      "properties": {
+        "url": {
+          "type": "string",
+          "format": "uri"
+        },
+        "title": {
+          "type": "string"
+        },
+        "selector": {
+          "$ref": "#/$defs/TextQuoteSelector",
+          "description": "W3C WADM selector for the most-centered visible paragraph (likely reading focus)"
+        },
+        "viewport": {
+          "$ref": "#/$defs/Viewport"
+        },
+        "selection": {
+          "type": ["string", "null"],
+          "description": "User-selected text, if any"
+        }
+      }
+    },
+    "TextQuoteSelector": {
+      "type": "object",
+      "description": "W3C Web Annotation Data Model TextQuoteSelector. Robust to minor edits via prefix/suffix context matching.",
+      "required": ["type", "exact"],
+      "properties": {
+        "type": {
+          "type": "string",
+          "const": "TextQuoteSelector"
+        },
+        "exact": {
+          "type": "string",
+          "description": "The exact text being targeted"
+        },
+        "prefix": {
+          "type": "string",
+          "description": "Text immediately preceding the exact match, for disambiguation"
+        },
+        "suffix": {
+          "type": "string",
+          "description": "Text immediately following the exact match, for disambiguation"
+        }
+      }
+    },
+    "Viewport": {
+      "type": "object",
+      "properties": {
+        "scroll_y": {
+          "type": "number",
+          "description": "Vertical scroll position in pixels"
+        },
+        "scroll_progress": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1,
+          "description": "Normalized scroll progress (0 = top, 1 = bottom)"
+        },
+        "viewport_height": {
+          "type": "number",
+          "description": "Browser viewport height in pixels"
+        },
+        "document_height": {
+          "type": "number",
+          "description": "Full document height in pixels"
+        },
+        "visible_paragraphs": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "index": {
+                "type": "integer",
+                "description": "Paragraph index in document order"
+              },
+              "text": {
+                "type": "string",
+                "maxLength": 200,
+                "description": "First 200 characters of paragraph text"
+              }
+            }
+          }
+        }
+      }
+    },
+    "Annotation": {
+      "type": "object",
+      "properties": {
+        "raw_ocr": {
+          "type": ["string", "null"],
+          "description": "Original OCR output from Apple Vision (via GoodNotes MCP). Null for diagrams where text OCR doesn't apply."
+        },
+        "context_corrected": {
+          "type": "string",
+          "description": "OCR corrected using article context via LLM (Do et al. 2024 reference-based approach)"
+        },
+        "confidence": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1,
+          "description": "Confidence of the context-corrected recognition"
+        },
+        "content_type": {
+          "type": "string",
+          "enum": ["text", "math", "diagram", "mixed"],
+          "description": "Classification of handwritten content (InkFM segmentation categories)"
+        },
+        "goodnotes_page": {
+          "type": "integer",
+          "description": "Page number in GoodNotes notebook"
+        },
+        "screenshot_ref": {
+          "type": "string",
+          "description": "Reference to the screen capture frame that detected this annotation"
+        },
+        "motivation": {
+          "type": "string",
+          "enum": [
+            "paraphrasing",
+            "elaborating",
+            "questioning",
+            "summarizing",
+            "connecting",
+            "evaluating",
+            "copying",
+            "highlighting",
+            "monitoring"
+          ],
+          "description": "Cognitive level classification adapted from think-aloud protocol coding schemes (Fiorella & Mayer 2016, Hamzah et al. 2024)"
+        },
+        "source_paragraph_link": {
+          "$ref": "#/$defs/TextQuoteSelector",
+          "description": "The specific article paragraph this annotation relates to"
+        },
+        "abbreviations_expanded": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "original": {
+                "type": "string"
+              },
+              "expanded": {
+                "type": "string"
+              },
+              "confidence": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 1
+              }
+            }
+          },
+          "description": "Abbreviations detected and expanded using article context (Cai et al. 2022)"
+        },
+        "diagram_description": {
+          "type": ["string", "null"],
+          "description": "LLM-generated description of any diagram/sketch content"
+        }
+      }
+    },
+    "GazeSample": {
+      "type": "object",
+      "required": ["timestamp", "session_id"],
+      "properties": {
+        "timestamp": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "session_id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "gaze_x": {
+          "type": ["number", "null"],
+          "description": "Horizontal gaze position in screen pixels (from WebGazer.js)"
+        },
+        "gaze_y": {
+          "type": ["number", "null"],
+          "description": "Vertical gaze position in screen pixels (from WebGazer.js)"
+        },
+        "gaze_confidence": {
+          "type": ["number", "null"],
+          "minimum": 0,
+          "maximum": 1,
+          "description": "WebGazer.js prediction confidence"
+        },
+        "scroll_y": {
+          "type": "number",
+          "description": "Chrome scroll position (scroll proxy for attention)"
+        },
+        "scroll_progress": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        }
+      }
+    },
+    "ScreenCapture": {
+      "type": "object",
+      "required": ["timestamp", "session_id", "frame_number"],
+      "properties": {
+        "timestamp": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "session_id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "frame_number": {
+          "type": "integer"
+        },
+        "screenshot_url": {
+          "type": "string",
+          "description": "Supabase Storage URL or local path"
+        },
+        "diff_detected": {
+          "type": "boolean",
+          "description": "Whether new ink was detected compared to previous frame"
+        },
+        "new_ink_region": {
+          "type": ["object", "null"],
+          "properties": {
+            "x": { "type": "number" },
+            "y": { "type": "number" },
+            "width": { "type": "number" },
+            "height": { "type": "number" }
+          },
+          "description": "Bounding box of detected changes in the GoodNotes window"
+        }
+      }
+    },
+    "SessionAnalytics": {
+      "type": "object",
+      "description": "Derived analytics computed post-session by Claude API (Layer 3)",
+      "properties": {
+        "reading_path": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "section": { "type": "string" },
+              "start_time": { "type": "string", "format": "date-time" },
+              "end_time": { "type": "string", "format": "date-time" },
+              "dwell_seconds": { "type": "number" },
+              "re_reads": { "type": "integer" }
+            }
+          },
+          "description": "Ordered sections with dwell times and re-reading episodes"
+        },
+        "annotation_timeline": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "timestamp": { "type": "string", "format": "date-time" },
+              "text": { "type": "string" },
+              "motivation": { "type": "string" },
+              "source_section": { "type": "string" },
+              "cognitive_level": {
+                "type": "string",
+                "enum": ["generative", "surface", "metacognitive"]
+              }
+            }
+          },
+          "description": "Annotations classified by cognitive level (Fiorella & Mayer 2016)"
+        },
+        "thought_progression": {
+          "type": "string",
+          "description": "LLM-generated narrative of how understanding evolved across the session"
+        },
+        "concept_map": {
+          "type": "object",
+          "properties": {
+            "concepts": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "name": { "type": "string" },
+                  "from_source": { "type": "boolean" },
+                  "from_notes": { "type": "boolean" }
+                }
+              }
+            },
+            "links": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "from": { "type": "string" },
+                  "to": { "type": "string" },
+                  "relation": { "type": "string" }
+                }
+              }
+            }
+          },
+          "description": "Extracted concepts from notes linked to source material concepts"
+        },
+        "learning_indicators": {
+          "type": "object",
+          "properties": {
+            "generative_ratio": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1,
+              "description": "Proportion of annotations classified as generative vs. surface"
+            },
+            "concept_coverage": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1,
+              "description": "Fraction of source concepts referenced in annotations"
+            },
+            "cross_references": {
+              "type": "integer",
+              "description": "Number of annotations linking across different source sections"
+            },
+            "total_annotations": {
+              "type": "integer"
+            },
+            "total_reading_minutes": {
+              "type": "number"
+            }
+          }
+        },
+        "computed_at": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    }
+  }
+}

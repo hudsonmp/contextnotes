@@ -1,0 +1,431 @@
+{
+  "session": {
+    "id": "b2c3d4e5-f6a7-8901-bcde-f12345678901",
+    "started_at": "2026-03-08T10:00:00.000Z",
+    "ended_at": "2026-03-08T10:15:30.000Z",
+    "article_url": "https://arxiv.org/abs/2503.23081",
+    "article_title": "InkFM: A Foundational Model for Full-Page Online Handwritten Note Understanding",
+    "notebook_name": "ML Papers",
+    "status": "completed"
+  },
+  "events": [
+    {
+      "id": "e0000002-0001-0000-0000-000000000001",
+      "session_id": "b2c3d4e5-f6a7-8901-bcde-f12345678901",
+      "timestamp": "2026-03-08T10:00:00.000Z",
+      "event_type": "session.start",
+      "source": {
+        "url": "https://arxiv.org/abs/2503.23081",
+        "title": "InkFM: A Foundational Model for Full-Page Online Handwritten Note Understanding"
+      }
+    },
+    {
+      "id": "e0000002-0001-0000-0000-000000000002",
+      "session_id": "b2c3d4e5-f6a7-8901-bcde-f12345678901",
+      "timestamp": "2026-03-08T10:01:15.000Z",
+      "event_type": "annotation.create",
+      "source": {
+        "url": "https://arxiv.org/abs/2503.23081",
+        "selector": {
+          "type": "TextQuoteSelector",
+          "exact": "three-level hierarchical segmentation: page into blocks, blocks into lines, and line-level content classification",
+          "prefix": "Our model performs ",
+          "suffix": " (text, math, drawing)"
+        },
+        "viewport": {
+          "scroll_y": 350,
+          "scroll_progress": 0.04,
+          "viewport_height": 900,
+          "document_height": 9200
+        }
+      },
+      "annotation": {
+        "raw_ocr": "3-lvl hier: pg→blk→line→class (txt/math/drw)",
+        "context_corrected": "3-level hierarchy: page → blocks → lines → classification (text/math/drawing)",
+        "confidence": 0.94,
+        "content_type": "text",
+        "goodnotes_page": 1,
+        "screenshot_ref": "screenshots/b2c3d4e5/frame-015.png",
+        "motivation": "summarizing",
+        "abbreviations_expanded": [
+          {"original": "lvl", "expanded": "level", "confidence": 0.99},
+          {"original": "hier", "expanded": "hierarchy", "confidence": 0.97},
+          {"original": "pg", "expanded": "page", "confidence": 0.99},
+          {"original": "blk", "expanded": "blocks", "confidence": 0.95},
+          {"original": "txt", "expanded": "text", "confidence": 0.99},
+          {"original": "drw", "expanded": "drawing", "confidence": 0.93}
+        ]
+      }
+    },
+    {
+      "id": "e0000002-0001-0000-0000-000000000003",
+      "session_id": "b2c3d4e5-f6a7-8901-bcde-f12345678901",
+      "timestamp": "2026-03-08T10:02:40.000Z",
+      "event_type": "annotation.create",
+      "source": {
+        "url": "https://arxiv.org/abs/2503.23081",
+        "selector": {
+          "type": "TextQuoteSelector",
+          "exact": "trained on 22K unique full-page notes",
+          "prefix": "InkFM is ",
+          "suffix": " with three-level hierarchical segmentation"
+        },
+        "viewport": {
+          "scroll_y": 800,
+          "scroll_progress": 0.09,
+          "viewport_height": 900,
+          "document_height": 9200
+        }
+      },
+      "annotation": {
+        "raw_ocr": "22K notes → is this enough? compare to CASIA (1M chars)",
+        "context_corrected": "22K notes → is this enough? Compare to CASIA (1M characters)",
+        "confidence": 0.90,
+        "content_type": "text",
+        "goodnotes_page": 1,
+        "motivation": "questioning",
+        "abbreviations_expanded": [
+          {"original": "chars", "expanded": "characters", "confidence": 0.97}
+        ]
+      }
+    },
+    {
+      "id": "e0000002-0001-0000-0000-000000000004",
+      "session_id": "b2c3d4e5-f6a7-8901-bcde-f12345678901",
+      "timestamp": "2026-03-08T10:03:50.000Z",
+      "event_type": "annotation.create",
+      "source": {
+        "url": "https://arxiv.org/abs/2503.23081",
+        "selector": {
+          "type": "TextQuoteSelector",
+          "exact": "surpasses docTR for text line segmentation",
+          "prefix": "InkFM ",
+          "suffix": " and achieves SOTA"
+        },
+        "viewport": {
+          "scroll_y": 1200,
+          "scroll_progress": 0.13,
+          "viewport_height": 900,
+          "document_height": 9200
+        }
+      },
+      "annotation": {
+        "raw_ocr": "beats docTR → but docTR is img-based, this is stroke-based. diff modality!",
+        "context_corrected": "Beats docTR → but docTR is image-based, this is stroke-based. Different modality!",
+        "confidence": 0.93,
+        "content_type": "text",
+        "goodnotes_page": 1,
+        "motivation": "evaluating",
+        "abbreviations_expanded": [
+          {"original": "img", "expanded": "image", "confidence": 0.99},
+          {"original": "diff", "expanded": "different", "confidence": 0.90}
+        ]
+      }
+    },
+    {
+      "id": "e0000002-0001-0000-0000-000000000005",
+      "session_id": "b2c3d4e5-f6a7-8901-bcde-f12345678901",
+      "timestamp": "2026-03-08T10:05:20.000Z",
+      "event_type": "annotation.create",
+      "source": {
+        "url": "https://arxiv.org/abs/2503.23081",
+        "selector": {
+          "type": "TextQuoteSelector",
+          "exact": "LoRA-tunable for domain adaptation",
+          "prefix": "The model is ",
+          "suffix": " with minimal data"
+        },
+        "viewport": {
+          "scroll_y": 2400,
+          "scroll_progress": 0.26,
+          "viewport_height": 900,
+          "document_height": 9200
+        }
+      },
+      "annotation": {
+        "raw_ocr": "LoRA → could finetune on MY notes! few-shot personalization",
+        "context_corrected": "LoRA → could fine-tune on my notes! Few-shot personalization",
+        "confidence": 0.95,
+        "content_type": "text",
+        "goodnotes_page": 1,
+        "motivation": "connecting"
+      }
+    },
+    {
+      "id": "e0000002-0001-0000-0000-000000000006",
+      "session_id": "b2c3d4e5-f6a7-8901-bcde-f12345678901",
+      "timestamp": "2026-03-08T10:06:45.000Z",
+      "event_type": "annotation.create",
+      "source": {
+        "url": "https://arxiv.org/abs/2503.23081",
+        "selector": {
+          "type": "TextQuoteSelector",
+          "exact": "handles text (28 scripts), math expressions, and drawings in a single model",
+          "prefix": "InkFM ",
+          "suffix": ". The architecture"
+        },
+        "viewport": {
+          "scroll_y": 3000,
+          "scroll_progress": 0.33,
+          "viewport_height": 900,
+          "document_height": 9200
+        }
+      },
+      "annotation": {
+        "raw_ocr": null,
+        "context_corrected": "[Diagram: Architecture overview showing encoder-decoder with three output heads for text, math, and drawing classification. Arrows show segmentation → recognition pipeline.]",
+        "confidence": 0.72,
+        "content_type": "diagram",
+        "goodnotes_page": 2,
+        "screenshot_ref": "screenshots/b2c3d4e5/frame-081.png",
+        "motivation": "summarizing",
+        "diagram_description": "Hand-drawn architecture diagram showing an encoder-decoder structure. Three output branches labeled 'text', 'math', 'draw'. Arrows indicate a two-stage pipeline: first segmentation, then per-type recognition."
+      }
+    },
+    {
+      "id": "e0000002-0001-0000-0000-000000000007",
+      "session_id": "b2c3d4e5-f6a7-8901-bcde-f12345678901",
+      "timestamp": "2026-03-08T10:08:00.000Z",
+      "event_type": "reading.scroll",
+      "source": {
+        "url": "https://arxiv.org/abs/2503.23081",
+        "selector": {
+          "type": "TextQuoteSelector",
+          "exact": "SOTA text recognition on DeepWriting, CASIA, SCUT, Mathwriting",
+          "prefix": "achieves ",
+          "suffix": " datasets"
+        },
+        "viewport": {
+          "scroll_y": 4500,
+          "scroll_progress": 0.49,
+          "viewport_height": 900,
+          "document_height": 9200
+        }
+      }
+    },
+    {
+      "id": "e0000002-0001-0000-0000-000000000008",
+      "session_id": "b2c3d4e5-f6a7-8901-bcde-f12345678901",
+      "timestamp": "2026-03-08T10:08:30.000Z",
+      "event_type": "annotation.create",
+      "source": {
+        "url": "https://arxiv.org/abs/2503.23081",
+        "selector": {
+          "type": "TextQuoteSelector",
+          "exact": "SOTA text recognition on DeepWriting, CASIA, SCUT, Mathwriting",
+          "prefix": "achieves ",
+          "suffix": " datasets"
+        },
+        "viewport": {
+          "scroll_y": 4500,
+          "scroll_progress": 0.49,
+          "viewport_height": 900,
+          "document_height": 9200
+        }
+      },
+      "annotation": {
+        "raw_ocr": "SOTA on 4 benchmarks but all clean datasets. messy notes = ?",
+        "context_corrected": "SOTA on 4 benchmarks but all clean datasets. Messy notes = unknown performance?",
+        "confidence": 0.88,
+        "content_type": "text",
+        "goodnotes_page": 2,
+        "motivation": "evaluating"
+      }
+    },
+    {
+      "id": "e0000002-0001-0000-0000-000000000009",
+      "session_id": "b2c3d4e5-f6a7-8901-bcde-f12345678901",
+      "timestamp": "2026-03-08T10:09:45.000Z",
+      "event_type": "annotation.create",
+      "source": {
+        "url": "https://arxiv.org/abs/2503.23081",
+        "selector": {
+          "type": "TextQuoteSelector",
+          "exact": "SOTA sketch classification on QuickDraw",
+          "prefix": "and ",
+          "suffix": ". InkFM"
+        },
+        "viewport": {
+          "scroll_y": 4800,
+          "scroll_progress": 0.52,
+          "viewport_height": 900,
+          "document_height": 9200
+        }
+      },
+      "annotation": {
+        "raw_ocr": "QD sketch clf → but notes dgms ≠ QuickDraw. dgms are structural not iconic",
+        "context_corrected": "QuickDraw sketch classification → but note diagrams are not like QuickDraw. Diagrams are structural not iconic",
+        "confidence": 0.86,
+        "content_type": "text",
+        "goodnotes_page": 2,
+        "motivation": "evaluating",
+        "abbreviations_expanded": [
+          {"original": "QD", "expanded": "QuickDraw", "confidence": 0.97},
+          {"original": "clf", "expanded": "classification", "confidence": 0.94},
+          {"original": "dgms", "expanded": "diagrams", "confidence": 0.92}
+        ]
+      }
+    },
+    {
+      "id": "e0000002-0001-0000-0000-000000000010",
+      "session_id": "b2c3d4e5-f6a7-8901-bcde-f12345678901",
+      "timestamp": "2026-03-08T10:11:00.000Z",
+      "event_type": "annotation.create",
+      "source": {
+        "url": "https://arxiv.org/abs/2503.23081",
+        "selector": {
+          "type": "TextQuoteSelector",
+          "exact": "Google internal work. Availability unclear",
+          "prefix": "",
+          "suffix": ""
+        },
+        "viewport": {
+          "scroll_y": 5500,
+          "scroll_progress": 0.60,
+          "viewport_height": 900,
+          "document_height": 9200
+        }
+      },
+      "annotation": {
+        "raw_ocr": "Google internal :( need open alt. check if weights released",
+        "context_corrected": "Google internal :( need open alternative. Check if weights are released",
+        "confidence": 0.91,
+        "content_type": "text",
+        "goodnotes_page": 2,
+        "motivation": "monitoring",
+        "abbreviations_expanded": [
+          {"original": "alt", "expanded": "alternative", "confidence": 0.96}
+        ]
+      }
+    },
+    {
+      "id": "e0000002-0001-0000-0000-000000000011",
+      "session_id": "b2c3d4e5-f6a7-8901-bcde-f12345678901",
+      "timestamp": "2026-03-08T10:12:30.000Z",
+      "event_type": "annotation.create",
+      "source": {
+        "url": "https://arxiv.org/abs/2503.23081",
+        "selector": {
+          "type": "TextQuoteSelector",
+          "exact": "online (stroke-based) input, not offline (image-based)",
+          "prefix": "requires ",
+          "suffix": " data"
+        },
+        "viewport": {
+          "scroll_y": 6000,
+          "scroll_progress": 0.65,
+          "viewport_height": 900,
+          "document_height": 9200
+        }
+      },
+      "annotation": {
+        "raw_ocr": "GN has stroke data! protobuf in notes/UUID. but proprietary format → reverse eng?",
+        "context_corrected": "GoodNotes has stroke data! Protobuf in notes/UUID. But proprietary format → reverse engineer?",
+        "confidence": 0.89,
+        "content_type": "text",
+        "goodnotes_page": 2,
+        "motivation": "connecting",
+        "abbreviations_expanded": [
+          {"original": "GN", "expanded": "GoodNotes", "confidence": 0.98},
+          {"original": "eng", "expanded": "engineer", "confidence": 0.87}
+        ]
+      }
+    },
+    {
+      "id": "e0000002-0001-0000-0000-000000000012",
+      "session_id": "b2c3d4e5-f6a7-8901-bcde-f12345678901",
+      "timestamp": "2026-03-08T10:14:00.000Z",
+      "event_type": "annotation.create",
+      "source": {
+        "url": "https://arxiv.org/abs/2503.23081",
+        "selector": {
+          "type": "TextQuoteSelector",
+          "exact": "Fadeeva et al. (2024) novel tokenized representation of digital ink that includes both stroke sequences as text AND rendered images",
+          "prefix": "",
+          "suffix": ""
+        },
+        "viewport": {
+          "scroll_y": 7000,
+          "scroll_progress": 0.76,
+          "viewport_height": 900,
+          "document_height": 9200
+        }
+      },
+      "annotation": {
+        "raw_ocr": "dual repr: strokes-as-text + rendered img → feed both to VLM. no arch changes!",
+        "context_corrected": "Dual representation: strokes-as-text + rendered image → feed both to VLM. No architecture changes needed!",
+        "confidence": 0.93,
+        "content_type": "text",
+        "goodnotes_page": 3,
+        "motivation": "summarizing",
+        "abbreviations_expanded": [
+          {"original": "repr", "expanded": "representation", "confidence": 0.96},
+          {"original": "img", "expanded": "image", "confidence": 0.99},
+          {"original": "arch", "expanded": "architecture", "confidence": 0.94}
+        ]
+      }
+    },
+    {
+      "id": "e0000002-0001-0000-0000-000000000013",
+      "session_id": "b2c3d4e5-f6a7-8901-bcde-f12345678901",
+      "timestamp": "2026-03-08T10:15:30.000Z",
+      "event_type": "session.end"
+    }
+  ],
+  "gaze_stream": [
+    {"timestamp": "2026-03-08T10:01:00.000Z", "session_id": "b2c3d4e5-f6a7-8901-bcde-f12345678901", "gaze_x": 640, "gaze_y": 350, "gaze_confidence": 0.72, "scroll_y": 350, "scroll_progress": 0.04},
+    {"timestamp": "2026-03-08T10:01:05.000Z", "session_id": "b2c3d4e5-f6a7-8901-bcde-f12345678901", "gaze_x": 655, "gaze_y": 380, "gaze_confidence": 0.68, "scroll_y": 350, "scroll_progress": 0.04},
+    {"timestamp": "2026-03-08T10:01:10.000Z", "session_id": "b2c3d4e5-f6a7-8901-bcde-f12345678901", "gaze_x": 620, "gaze_y": 420, "gaze_confidence": 0.75, "scroll_y": 350, "scroll_progress": 0.04},
+    {"timestamp": "2026-03-08T10:01:15.000Z", "session_id": "b2c3d4e5-f6a7-8901-bcde-f12345678901", "gaze_x": null, "gaze_y": null, "gaze_confidence": null, "scroll_y": 800, "scroll_progress": 0.09},
+    {"timestamp": "2026-03-08T10:01:20.000Z", "session_id": "b2c3d4e5-f6a7-8901-bcde-f12345678901", "gaze_x": 580, "gaze_y": 310, "gaze_confidence": 0.71, "scroll_y": 800, "scroll_progress": 0.09}
+  ],
+  "screen_captures": [
+    {"timestamp": "2026-03-08T10:01:13.000Z", "session_id": "b2c3d4e5-f6a7-8901-bcde-f12345678901", "frame_number": 15, "screenshot_url": "screenshots/b2c3d4e5/frame-015.png", "diff_detected": true, "new_ink_region": {"x": 40, "y": 80, "width": 550, "height": 25}},
+    {"timestamp": "2026-03-08T10:06:43.000Z", "session_id": "b2c3d4e5-f6a7-8901-bcde-f12345678901", "frame_number": 81, "screenshot_url": "screenshots/b2c3d4e5/frame-081.png", "diff_detected": true, "new_ink_region": {"x": 30, "y": 60, "width": 600, "height": 350}}
+  ],
+  "analytics": {
+    "reading_path": [
+      {"section": "Abstract", "start_time": "2026-03-08T10:00:00.000Z", "end_time": "2026-03-08T10:01:30.000Z", "dwell_seconds": 90, "re_reads": 0},
+      {"section": "Introduction", "start_time": "2026-03-08T10:01:30.000Z", "end_time": "2026-03-08T10:05:30.000Z", "dwell_seconds": 240, "re_reads": 0},
+      {"section": "Architecture", "start_time": "2026-03-08T10:05:30.000Z", "end_time": "2026-03-08T10:08:00.000Z", "dwell_seconds": 150, "re_reads": 0},
+      {"section": "Results", "start_time": "2026-03-08T10:08:00.000Z", "end_time": "2026-03-08T10:11:00.000Z", "dwell_seconds": 180, "re_reads": 1},
+      {"section": "Discussion", "start_time": "2026-03-08T10:11:00.000Z", "end_time": "2026-03-08T10:15:30.000Z", "dwell_seconds": 270, "re_reads": 0}
+    ],
+    "annotation_timeline": [
+      {"timestamp": "2026-03-08T10:01:15.000Z", "text": "3-level hierarchy: page → blocks → lines → classification", "motivation": "summarizing", "source_section": "Abstract", "cognitive_level": "generative"},
+      {"timestamp": "2026-03-08T10:02:40.000Z", "text": "22K notes → is this enough? Compare to CASIA", "motivation": "questioning", "source_section": "Introduction", "cognitive_level": "generative"},
+      {"timestamp": "2026-03-08T10:03:50.000Z", "text": "Beats docTR but different modality", "motivation": "evaluating", "source_section": "Introduction", "cognitive_level": "generative"},
+      {"timestamp": "2026-03-08T10:05:20.000Z", "text": "LoRA → could fine-tune on my notes", "motivation": "connecting", "source_section": "Architecture", "cognitive_level": "generative"},
+      {"timestamp": "2026-03-08T10:06:45.000Z", "text": "[Architecture diagram]", "motivation": "summarizing", "source_section": "Architecture", "cognitive_level": "generative"},
+      {"timestamp": "2026-03-08T10:08:30.000Z", "text": "SOTA on 4 benchmarks but all clean datasets", "motivation": "evaluating", "source_section": "Results", "cognitive_level": "generative"},
+      {"timestamp": "2026-03-08T10:09:45.000Z", "text": "QuickDraw ≠ note diagrams", "motivation": "evaluating", "source_section": "Results", "cognitive_level": "generative"},
+      {"timestamp": "2026-03-08T10:11:00.000Z", "text": "Google internal, need open alternative", "motivation": "monitoring", "source_section": "Discussion", "cognitive_level": "metacognitive"},
+      {"timestamp": "2026-03-08T10:12:30.000Z", "text": "GoodNotes has stroke data in protobuf", "motivation": "connecting", "source_section": "Discussion", "cognitive_level": "generative"},
+      {"timestamp": "2026-03-08T10:14:00.000Z", "text": "Dual representation for VLMs", "motivation": "summarizing", "source_section": "Discussion", "cognitive_level": "generative"}
+    ],
+    "thought_progression": "The reader began with a structural overview (summarizing the 3-level hierarchy), then quickly shifted to critical evaluation: questioning dataset size (22K vs. CASIA), challenging the modality comparison with docTR, and noting that benchmarks use clean data while real notes are messy. A key connecting insight emerged at 10:05 — linking LoRA fine-tuning to personal note recognition. The diagram at 10:06 shows integration of the architecture. The second half focused on practical feasibility: evaluating QuickDraw's relevance to real diagrams, flagging availability concerns (Google internal), and discovering that GoodNotes' stroke data format could enable the online-input approach. The session shows strong evaluative engagement with a practical application lens.",
+    "concept_map": {
+      "concepts": [
+        {"name": "hierarchical segmentation", "from_source": true, "from_notes": true},
+        {"name": "LoRA fine-tuning", "from_source": true, "from_notes": true},
+        {"name": "stroke vs image input", "from_source": true, "from_notes": true},
+        {"name": "personal handwriting adaptation", "from_source": false, "from_notes": true},
+        {"name": "GoodNotes protobuf format", "from_source": false, "from_notes": true},
+        {"name": "benchmark vs real-world gap", "from_source": false, "from_notes": true}
+      ],
+      "links": [
+        {"from": "LoRA fine-tuning", "to": "personal handwriting adaptation", "relation": "enables"},
+        {"from": "stroke vs image input", "to": "GoodNotes protobuf format", "relation": "could leverage"},
+        {"from": "hierarchical segmentation", "to": "benchmark vs real-world gap", "relation": "untested on"}
+      ]
+    },
+    "learning_indicators": {
+      "generative_ratio": 0.9,
+      "concept_coverage": 0.6,
+      "cross_references": 3,
+      "total_annotations": 10,
+      "total_reading_minutes": 15.5
+    },
+    "computed_at": "2026-03-08T10:16:00.000Z"
+  }
+}

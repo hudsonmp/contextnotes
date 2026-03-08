@@ -1,0 +1,227 @@
+{
+  "session": {
+    "id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+    "started_at": "2026-03-08T14:00:00.000Z",
+    "ended_at": "2026-03-08T14:05:12.000Z",
+    "article_url": "https://arxiv.org/abs/2205.03767",
+    "article_title": "Context-Aware Abbreviation Expansion Using Large Language Models",
+    "notebook_name": "Research Notes",
+    "status": "completed"
+  },
+  "events": [
+    {
+      "id": "e0000001-0000-0000-0000-000000000001",
+      "session_id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+      "timestamp": "2026-03-08T14:00:00.000Z",
+      "event_type": "session.start",
+      "source": {
+        "url": "https://arxiv.org/abs/2205.03767",
+        "title": "Context-Aware Abbreviation Expansion Using Large Language Models",
+        "viewport": {
+          "scroll_y": 0,
+          "scroll_progress": 0.0,
+          "viewport_height": 900,
+          "document_height": 8500,
+          "visible_paragraphs": [
+            {"index": 0, "text": "Context-Aware Abbreviation Expansion Using Large Language Models"},
+            {"index": 1, "text": "Shanqing Cai, Subhashini Venugopalan, Katrin Tomanek, Ajit Narayanan, Meredith Ringel Morris, Michael P. Brenner"}
+          ]
+        }
+      }
+    },
+    {
+      "id": "e0000001-0000-0000-0000-000000000002",
+      "session_id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+      "timestamp": "2026-03-08T14:00:45.000Z",
+      "event_type": "reading.scroll",
+      "source": {
+        "url": "https://arxiv.org/abs/2205.03767",
+        "title": "Context-Aware Abbreviation Expansion Using Large Language Models",
+        "selector": {
+          "type": "TextQuoteSelector",
+          "exact": "We propose to leverage the conversation context to expand abbreviations by generating phrase-level expansion candidates",
+          "prefix": "In this paper, ",
+          "suffix": " with a large language model"
+        },
+        "viewport": {
+          "scroll_y": 420,
+          "scroll_progress": 0.05,
+          "viewport_height": 900,
+          "document_height": 8500,
+          "visible_paragraphs": [
+            {"index": 2, "text": "Abstract: Abbreviations are commonly used in everyday communication..."},
+            {"index": 3, "text": "We propose to leverage the conversation context to expand abbreviations..."}
+          ]
+        }
+      }
+    },
+    {
+      "id": "e0000001-0000-0000-0000-000000000003",
+      "session_id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+      "timestamp": "2026-03-08T14:01:30.000Z",
+      "event_type": "annotation.create",
+      "source": {
+        "url": "https://arxiv.org/abs/2205.03767",
+        "title": "Context-Aware Abbreviation Expansion Using Large Language Models",
+        "selector": {
+          "type": "TextQuoteSelector",
+          "exact": "one turn of context more than doubles the expansion accuracy",
+          "prefix": "Our results show that ",
+          "suffix": " compared to having no context"
+        },
+        "viewport": {
+          "scroll_y": 600,
+          "scroll_progress": 0.07,
+          "viewport_height": 900,
+          "document_height": 8500,
+          "visible_paragraphs": [
+            {"index": 3, "text": "We propose to leverage the conversation context to expand abbreviations..."},
+            {"index": 4, "text": "Our results show that one turn of context more than doubles the expansion accuracy..."}
+          ]
+        }
+      },
+      "annotation": {
+        "raw_ocr": "1 turn ctx → 2x acc !!",
+        "context_corrected": "1 turn of context → 2x accuracy",
+        "confidence": 0.92,
+        "content_type": "text",
+        "goodnotes_page": 1,
+        "screenshot_ref": "screenshots/a1b2c3d4/frame-018.png",
+        "motivation": "summarizing",
+        "source_paragraph_link": {
+          "type": "TextQuoteSelector",
+          "exact": "one turn of context more than doubles the expansion accuracy",
+          "prefix": "Our results show that ",
+          "suffix": " compared to having no context"
+        },
+        "abbreviations_expanded": [
+          {"original": "ctx", "expanded": "context", "confidence": 0.98},
+          {"original": "acc", "expanded": "accuracy", "confidence": 0.95}
+        ]
+      }
+    },
+    {
+      "id": "e0000001-0000-0000-0000-000000000004",
+      "session_id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+      "timestamp": "2026-03-08T14:02:45.000Z",
+      "event_type": "annotation.create",
+      "source": {
+        "url": "https://arxiv.org/abs/2205.03767",
+        "title": "Context-Aware Abbreviation Expansion Using Large Language Models",
+        "selector": {
+          "type": "TextQuoteSelector",
+          "exact": "We filter the generated expansions to only keep those whose initials match the original abbreviation",
+          "prefix": "a constrained decoding approach. ",
+          "suffix": ", ensuring correctness"
+        },
+        "viewport": {
+          "scroll_y": 2100,
+          "scroll_progress": 0.25,
+          "viewport_height": 900,
+          "document_height": 8500,
+          "visible_paragraphs": [
+            {"index": 8, "text": "We filter the generated expansions to only keep those whose initials match..."},
+            {"index": 9, "text": "This filtering step is critical to maintaining precision..."}
+          ]
+        }
+      },
+      "annotation": {
+        "raw_ocr": "filter: keep only init match → precision",
+        "context_corrected": "Filtering: keep only initial-letter matches → maintains precision",
+        "confidence": 0.88,
+        "content_type": "text",
+        "goodnotes_page": 1,
+        "screenshot_ref": "screenshots/a1b2c3d4/frame-033.png",
+        "motivation": "paraphrasing",
+        "source_paragraph_link": {
+          "type": "TextQuoteSelector",
+          "exact": "We filter the generated expansions to only keep those whose initials match the original abbreviation",
+          "prefix": "a constrained decoding approach. ",
+          "suffix": ", ensuring correctness"
+        },
+        "abbreviations_expanded": [
+          {"original": "init", "expanded": "initial-letter", "confidence": 0.85}
+        ]
+      }
+    },
+    {
+      "id": "e0000001-0000-0000-0000-000000000005",
+      "session_id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+      "timestamp": "2026-03-08T14:04:10.000Z",
+      "event_type": "annotation.create",
+      "source": {
+        "url": "https://arxiv.org/abs/2205.03767",
+        "title": "Context-Aware Abbreviation Expansion Using Large Language Models",
+        "selector": {
+          "type": "TextQuoteSelector",
+          "exact": "a 64B language model can exactly expand more than 70% of phrases",
+          "prefix": "We find that ",
+          "suffix": " with abbreviation length <= 10"
+        },
+        "viewport": {
+          "scroll_y": 3800,
+          "scroll_progress": 0.45,
+          "viewport_height": 900,
+          "document_height": 8500,
+          "visible_paragraphs": [
+            {"index": 15, "text": "We find that a 64B language model can exactly expand more than 70%..."}
+          ]
+        }
+      },
+      "annotation": {
+        "raw_ocr": "Q: wld smaller mdl work? 7B? how much ctx needed?",
+        "context_corrected": "Question: would a smaller model work? 7B? How much context is needed?",
+        "confidence": 0.91,
+        "content_type": "text",
+        "goodnotes_page": 1,
+        "screenshot_ref": "screenshots/a1b2c3d4/frame-049.png",
+        "motivation": "questioning",
+        "source_paragraph_link": {
+          "type": "TextQuoteSelector",
+          "exact": "a 64B language model can exactly expand more than 70% of phrases",
+          "prefix": "We find that ",
+          "suffix": " with abbreviation length <= 10"
+        },
+        "abbreviations_expanded": [
+          {"original": "wld", "expanded": "would", "confidence": 0.93},
+          {"original": "mdl", "expanded": "model", "confidence": 0.96},
+          {"original": "ctx", "expanded": "context", "confidence": 0.98}
+        ]
+      }
+    },
+    {
+      "id": "e0000001-0000-0000-0000-000000000006",
+      "session_id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+      "timestamp": "2026-03-08T14:05:12.000Z",
+      "event_type": "session.end"
+    }
+  ],
+  "gaze_stream": [],
+  "screen_captures": [
+    {
+      "timestamp": "2026-03-08T14:01:28.000Z",
+      "session_id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+      "frame_number": 18,
+      "screenshot_url": "screenshots/a1b2c3d4/frame-018.png",
+      "diff_detected": true,
+      "new_ink_region": {"x": 50, "y": 120, "width": 400, "height": 30}
+    },
+    {
+      "timestamp": "2026-03-08T14:02:43.000Z",
+      "session_id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+      "frame_number": 33,
+      "screenshot_url": "screenshots/a1b2c3d4/frame-033.png",
+      "diff_detected": true,
+      "new_ink_region": {"x": 50, "y": 170, "width": 500, "height": 30}
+    },
+    {
+      "timestamp": "2026-03-08T14:04:08.000Z",
+      "session_id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+      "frame_number": 49,
+      "screenshot_url": "screenshots/a1b2c3d4/frame-049.png",
+      "diff_detected": true,
+      "new_ink_region": {"x": 50, "y": 220, "width": 520, "height": 35}
+    }
+  ],
+  "analytics": null
+}

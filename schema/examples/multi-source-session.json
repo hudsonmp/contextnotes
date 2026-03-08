@@ -1,0 +1,281 @@
+{
+  "session": {
+    "id": "c3d4e5f6-a7b8-9012-cdef-123456789012",
+    "started_at": "2026-03-08T16:00:00.000Z",
+    "ended_at": "2026-03-08T16:12:00.000Z",
+    "article_url": "https://arxiv.org/abs/2410.13305",
+    "article_title": "Reference-Based Post-OCR Processing with LLM for Precise Diacritic Text",
+    "notebook_name": "OCR Pipeline Design",
+    "status": "completed"
+  },
+  "events": [
+    {
+      "id": "e0000003-0001-0000-0000-000000000001",
+      "session_id": "c3d4e5f6-a7b8-9012-cdef-123456789012",
+      "timestamp": "2026-03-08T16:00:00.000Z",
+      "event_type": "session.start",
+      "source": {
+        "url": "https://arxiv.org/abs/2410.13305",
+        "title": "Reference-Based Post-OCR Processing with LLM for Precise Diacritic Text"
+      }
+    },
+    {
+      "id": "e0000003-0001-0000-0000-000000000002",
+      "session_id": "c3d4e5f6-a7b8-9012-cdef-123456789012",
+      "timestamp": "2026-03-08T16:01:30.000Z",
+      "event_type": "annotation.create",
+      "source": {
+        "url": "https://arxiv.org/abs/2410.13305",
+        "selector": {
+          "type": "TextQuoteSelector",
+          "exact": "uses available content-focused ebooks as a reference base to correct OCR output",
+          "prefix": "Our approach ",
+          "suffix": ", supported by LLMs"
+        },
+        "viewport": {
+          "scroll_y": 500,
+          "scroll_progress": 0.06,
+          "viewport_height": 900,
+          "document_height": 7800
+        }
+      },
+      "annotation": {
+        "raw_ocr": "KEY: ebook = reference → constrains LLM correction space. For us: article = reference",
+        "context_corrected": "KEY: ebook = reference → constrains LLM correction space. For us: article being read = reference for note recognition",
+        "confidence": 0.94,
+        "content_type": "text",
+        "goodnotes_page": 1,
+        "motivation": "connecting",
+        "source_paragraph_link": {
+          "type": "TextQuoteSelector",
+          "exact": "uses available content-focused ebooks as a reference base to correct OCR output",
+          "prefix": "Our approach ",
+          "suffix": ", supported by LLMs"
+        }
+      }
+    },
+    {
+      "id": "e0000003-0001-0000-0000-000000000003",
+      "session_id": "c3d4e5f6-a7b8-9012-cdef-123456789012",
+      "timestamp": "2026-03-08T16:03:00.000Z",
+      "event_type": "annotation.create",
+      "source": {
+        "url": "https://arxiv.org/abs/2410.13305",
+        "selector": {
+          "type": "TextQuoteSelector",
+          "exact": "Mean grading score of 8.72/10, outperforming SOTA Vietnamese spell correction (7.03/10)",
+          "prefix": "achieves a ",
+          "suffix": ". The reference"
+        },
+        "viewport": {
+          "scroll_y": 1800,
+          "scroll_progress": 0.23,
+          "viewport_height": 900,
+          "document_height": 7800
+        }
+      },
+      "annotation": {
+        "raw_ocr": "8.72 vs 7.03 → 24% imprvmnt. but: Vietnamese diacritics ≠ English abbrevs. transfer?",
+        "context_corrected": "8.72 vs 7.03 → 24% improvement. But: Vietnamese diacritics ≠ English abbreviations. Does the approach transfer?",
+        "confidence": 0.90,
+        "content_type": "text",
+        "goodnotes_page": 1,
+        "motivation": "evaluating",
+        "abbreviations_expanded": [
+          {"original": "imprvmnt", "expanded": "improvement", "confidence": 0.91},
+          {"original": "abbrevs", "expanded": "abbreviations", "confidence": 0.95}
+        ]
+      }
+    },
+    {
+      "id": "e0000003-0001-0000-0000-000000000004",
+      "session_id": "c3d4e5f6-a7b8-9012-cdef-123456789012",
+      "timestamp": "2026-03-08T16:05:00.000Z",
+      "event_type": "reading.navigate",
+      "source": {
+        "url": "https://arxiv.org/abs/2205.03767",
+        "title": "Context-Aware Abbreviation Expansion Using Large Language Models",
+        "viewport": {
+          "scroll_y": 0,
+          "scroll_progress": 0.0,
+          "viewport_height": 900,
+          "document_height": 8500
+        }
+      }
+    },
+    {
+      "id": "e0000003-0001-0000-0000-000000000005",
+      "session_id": "c3d4e5f6-a7b8-9012-cdef-123456789012",
+      "timestamp": "2026-03-08T16:06:30.000Z",
+      "event_type": "annotation.create",
+      "source": {
+        "url": "https://arxiv.org/abs/2205.03767",
+        "title": "Context-Aware Abbreviation Expansion Using Large Language Models",
+        "selector": {
+          "type": "TextQuoteSelector",
+          "exact": "one turn of context more than doubles the expansion accuracy",
+          "prefix": "Our results show that ",
+          "suffix": " compared to having no context"
+        },
+        "viewport": {
+          "scroll_y": 600,
+          "scroll_progress": 0.07,
+          "viewport_height": 900,
+          "document_height": 8500
+        }
+      },
+      "annotation": {
+        "raw_ocr": "cf Do: ref constrains → here: ctx doubles acc. BOTH constrain + ctx. combine!",
+        "context_corrected": "Compare to Do et al.: reference constrains correction space → here: context doubles accuracy. Both constrain + provide context. Combine both approaches!",
+        "confidence": 0.88,
+        "content_type": "text",
+        "goodnotes_page": 1,
+        "motivation": "connecting",
+        "abbreviations_expanded": [
+          {"original": "cf", "expanded": "compare to", "confidence": 0.85},
+          {"original": "ref", "expanded": "reference", "confidence": 0.93},
+          {"original": "ctx", "expanded": "context", "confidence": 0.98},
+          {"original": "acc", "expanded": "accuracy", "confidence": 0.96}
+        ],
+        "source_paragraph_link": {
+          "type": "TextQuoteSelector",
+          "exact": "one turn of context more than doubles the expansion accuracy",
+          "prefix": "Our results show that ",
+          "suffix": " compared to having no context"
+        }
+      }
+    },
+    {
+      "id": "e0000003-0001-0000-0000-000000000006",
+      "session_id": "c3d4e5f6-a7b8-9012-cdef-123456789012",
+      "timestamp": "2026-03-08T16:08:30.000Z",
+      "event_type": "annotation.create",
+      "source": {
+        "url": "https://arxiv.org/abs/2205.03767",
+        "title": "Context-Aware Abbreviation Expansion Using Large Language Models",
+        "selector": {
+          "type": "TextQuoteSelector",
+          "exact": "We filter the generated expansions to only keep those whose initials match the original abbreviation",
+          "prefix": "",
+          "suffix": ""
+        },
+        "viewport": {
+          "scroll_y": 2100,
+          "scroll_progress": 0.25,
+          "viewport_height": 900,
+          "document_height": 8500
+        }
+      },
+      "annotation": {
+        "raw_ocr": null,
+        "context_corrected": "[Diagram: Pipeline sketch showing three stages — (1) OCR raw output → (2) LLM with article context → (3) initial-match filter. Arrow from Do et al. 'reference constraint' merging at stage 2. Arrow from Cai et al. 'abbreviation expansion' at stage 3.]",
+        "confidence": 0.70,
+        "content_type": "diagram",
+        "goodnotes_page": 2,
+        "screenshot_ref": "screenshots/c3d4e5f6/frame-102.png",
+        "motivation": "connecting",
+        "diagram_description": "Hand-drawn pipeline combining ideas from two papers. Three processing stages labeled 1-2-3. Stage 2 shows 'LLM + article context' with arrows from both 'Do: reference constraint' and the raw OCR input. Stage 3 shows 'Cai: initial-match filter' for abbreviation expansion verification."
+      }
+    },
+    {
+      "id": "e0000003-0001-0000-0000-000000000007",
+      "session_id": "c3d4e5f6-a7b8-9012-cdef-123456789012",
+      "timestamp": "2026-03-08T16:10:00.000Z",
+      "event_type": "reading.navigate",
+      "source": {
+        "url": "https://arxiv.org/abs/2410.13305",
+        "title": "Reference-Based Post-OCR Processing with LLM for Precise Diacritic Text",
+        "viewport": {
+          "scroll_y": 1800,
+          "scroll_progress": 0.23,
+          "viewport_height": 900,
+          "document_height": 7800
+        }
+      }
+    },
+    {
+      "id": "e0000003-0001-0000-0000-000000000008",
+      "session_id": "c3d4e5f6-a7b8-9012-cdef-123456789012",
+      "timestamp": "2026-03-08T16:11:00.000Z",
+      "event_type": "annotation.create",
+      "source": {
+        "url": "https://arxiv.org/abs/2410.13305",
+        "selector": {
+          "type": "TextQuoteSelector",
+          "exact": "requires page-level alignment between reference and OCR output",
+          "prefix": "limitation: ",
+          "suffix": ""
+        },
+        "viewport": {
+          "scroll_y": 4000,
+          "scroll_progress": 0.51,
+          "viewport_height": 900,
+          "document_height": 7800
+        }
+      },
+      "annotation": {
+        "raw_ocr": "page align needed → for us: temporal align. note timestamp ↔ reading position. ±30s window",
+        "context_corrected": "Page alignment needed → for us: temporal alignment. Note timestamp ↔ reading position. Use ±30 second window to match",
+        "confidence": 0.92,
+        "content_type": "text",
+        "goodnotes_page": 2,
+        "motivation": "connecting",
+        "abbreviations_expanded": [
+          {"original": "align", "expanded": "alignment", "confidence": 0.97}
+        ]
+      }
+    },
+    {
+      "id": "e0000003-0001-0000-0000-000000000009",
+      "session_id": "c3d4e5f6-a7b8-9012-cdef-123456789012",
+      "timestamp": "2026-03-08T16:12:00.000Z",
+      "event_type": "session.end"
+    }
+  ],
+  "gaze_stream": [
+    {"timestamp": "2026-03-08T16:01:00.000Z", "session_id": "c3d4e5f6-a7b8-9012-cdef-123456789012", "gaze_x": 700, "gaze_y": 400, "gaze_confidence": 0.65, "scroll_y": 500, "scroll_progress": 0.06},
+    {"timestamp": "2026-03-08T16:05:30.000Z", "session_id": "c3d4e5f6-a7b8-9012-cdef-123456789012", "gaze_x": 680, "gaze_y": 350, "gaze_confidence": 0.70, "scroll_y": 300, "scroll_progress": 0.04},
+    {"timestamp": "2026-03-08T16:10:30.000Z", "session_id": "c3d4e5f6-a7b8-9012-cdef-123456789012", "gaze_x": 650, "gaze_y": 500, "gaze_confidence": 0.62, "scroll_y": 4000, "scroll_progress": 0.51}
+  ],
+  "screen_captures": [
+    {"timestamp": "2026-03-08T16:08:28.000Z", "session_id": "c3d4e5f6-a7b8-9012-cdef-123456789012", "frame_number": 102, "screenshot_url": "screenshots/c3d4e5f6/frame-102.png", "diff_detected": true, "new_ink_region": {"x": 30, "y": 400, "width": 650, "height": 300}}
+  ],
+  "analytics": {
+    "reading_path": [
+      {"section": "Do et al. - Abstract/Intro", "start_time": "2026-03-08T16:00:00.000Z", "end_time": "2026-03-08T16:03:30.000Z", "dwell_seconds": 210, "re_reads": 0},
+      {"section": "Do et al. - Results", "start_time": "2026-03-08T16:03:30.000Z", "end_time": "2026-03-08T16:05:00.000Z", "dwell_seconds": 90, "re_reads": 0},
+      {"section": "Cai et al. - Abstract/Method (navigated)", "start_time": "2026-03-08T16:05:00.000Z", "end_time": "2026-03-08T16:10:00.000Z", "dwell_seconds": 300, "re_reads": 0},
+      {"section": "Do et al. - Limitations (returned)", "start_time": "2026-03-08T16:10:00.000Z", "end_time": "2026-03-08T16:12:00.000Z", "dwell_seconds": 120, "re_reads": 1}
+    ],
+    "annotation_timeline": [
+      {"timestamp": "2026-03-08T16:01:30.000Z", "text": "Ebook = reference → for us: article = reference", "motivation": "connecting", "source_section": "Do et al. - Abstract", "cognitive_level": "generative"},
+      {"timestamp": "2026-03-08T16:03:00.000Z", "text": "8.72 vs 7.03 but Vietnamese ≠ English", "motivation": "evaluating", "source_section": "Do et al. - Results", "cognitive_level": "generative"},
+      {"timestamp": "2026-03-08T16:06:30.000Z", "text": "Compare Do reference-constraint with Cai context-doubling", "motivation": "connecting", "source_section": "Cai et al. - Abstract", "cognitive_level": "generative"},
+      {"timestamp": "2026-03-08T16:08:30.000Z", "text": "[Pipeline diagram combining both approaches]", "motivation": "connecting", "source_section": "Cai et al. - Method", "cognitive_level": "generative"},
+      {"timestamp": "2026-03-08T16:11:00.000Z", "text": "Page alignment → temporal alignment with ±30s window", "motivation": "connecting", "source_section": "Do et al. - Limitations", "cognitive_level": "generative"}
+    ],
+    "thought_progression": "This session demonstrates cross-paper synthesis. The reader started with Do et al.'s reference-based OCR correction, immediately mapping the 'ebook as reference' concept to their own system ('article being read = reference'). After evaluating the results with a validity concern (Vietnamese diacritics ≠ English abbreviations), they navigated to Cai et al. to compare approaches. The key synthesis moment came at 16:06-16:08: recognizing that Do's reference-constraint and Cai's context-doubling are complementary mechanisms, then drawing a pipeline diagram that combines both. Returning to Do et al., they translated the page-alignment limitation into their temporal alignment solution (±30s window). This session shows strong integrative thinking across sources — 4 of 5 annotations are 'connecting' motivation.",
+    "concept_map": {
+      "concepts": [
+        {"name": "reference-based OCR correction", "from_source": true, "from_notes": true},
+        {"name": "context-aware abbreviation expansion", "from_source": true, "from_notes": true},
+        {"name": "page alignment → temporal alignment", "from_source": true, "from_notes": true},
+        {"name": "combined pipeline", "from_source": false, "from_notes": true},
+        {"name": "initial-match filter", "from_source": true, "from_notes": true}
+      ],
+      "links": [
+        {"from": "reference-based OCR correction", "to": "combined pipeline", "relation": "provides constraint at LLM stage"},
+        {"from": "context-aware abbreviation expansion", "to": "combined pipeline", "relation": "provides expansion + filter"},
+        {"from": "page alignment → temporal alignment", "to": "combined pipeline", "relation": "enables input matching"}
+      ]
+    },
+    "learning_indicators": {
+      "generative_ratio": 1.0,
+      "concept_coverage": 0.75,
+      "cross_references": 4,
+      "total_annotations": 5,
+      "total_reading_minutes": 12.0
+    },
+    "computed_at": "2026-03-08T16:13:00.000Z"
+  }
+}
