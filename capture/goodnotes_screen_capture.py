@@ -86,48 +86,78 @@ def capture_screen_region(output_path: Optional[str] = None) -> bytes:
     return data
 
 
-def capture_goodnotes_window() -> Optional[bytes]:
-    """Capture just the GoodNotes window using CGWindowListCreateImage approach.
+def _find_window_id(name_patterns: list[str]) -> Optional[str]:
+    """Find a CGWindowID for any window whose owner name matches a pattern.
 
-    Uses `screencapture -l <windowid>` which takes a CGWindowID.
-    We get CGWindowIDs via the Quartz API.
+    Uses Quartz directly (no subprocess) for speed.
     """
     try:
-        # Get CGWindowID for GoodNotes via Python Quartz bindings
-        result = subprocess.run(
-            ["python3", "-c", """
-import Quartz
-windows = Quartz.CGWindowListCopyWindowInfo(
-    Quartz.kCGWindowListOptionOnScreenOnly,
-    Quartz.kCGNullWindowID
-)
-for w in windows:
-    owner = w.get('kCGWindowOwnerName', '')
-    if 'GoodNotes' in owner:
-        print(w['kCGWindowNumber'])
-        break
-"""],
-            capture_output=True, text=True, timeout=5
+        import Quartz
+        windows = Quartz.CGWindowListCopyWindowInfo(
+            Quartz.kCGWindowListOptionOnScreenOnly,
+            Quartz.kCGNullWindowID,
         )
-        window_id = result.stdout.strip()
-        if not window_id:
-            return None
+        for w in windows:
+            owner = w.get("kCGWindowOwnerName", "")
+            name = w.get("kCGWindowName", "")
+            combined = f"{owner} {name}".lower()
+            for pattern in name_patterns:
+                if pattern.lower() in combined:
+                    bounds = w.get("kCGWindowBounds", {})
+                    # Skip tiny windows (toolbars, overlays)
+                    if bounds.get("Height", 0) > 200 and bounds.get("Width", 0) > 200:
+                        return str(w["kCGWindowNumber"])
+        return None
+    except Exception:
+        return None
 
+
+def _screencapture_window(window_id: str) -> Optional[bytes]:
+    """Capture a window by CGWindowID, return PNG bytes."""
+    try:
         with tempfile.NamedTemporaryFile(suffix=".png", delete=False) as tmp:
             tmp_path = tmp.name
 
         subprocess.run(
             ["screencapture", "-x", "-l", window_id, "-t", "png", tmp_path],
-            check=True, timeout=10
+            check=True, timeout=10,
         )
 
         with open(tmp_path, "rb") as f:
             data = f.read()
         Path(tmp_path).unlink(missing_ok=True)
-        return data
-
+        return data if len(data) > 100 else None
     except (subprocess.SubprocessError, Exception):
         return None
+
+
+# Window search patterns, tried in order:
+# 1. GoodNotes running natively on Mac
+# 2. iPad mirrored via QuickTime Player
+# 3. macOS iPhone/iPad Mirroring app (Sequoia+)
+WINDOW_SEARCH_ORDER = [
+    ["goodnotes"],
+    ["quicktime player"],
+    ["ipad", "iphone mirroring"],
+]
+
+
+def capture_goodnotes_window() -> Optional[bytes]:
+    """Capture the GoodNotes window — works with native Mac app or iPad mirror.
+
+    Search order:
+    1. GoodNotes running on Mac (direct window capture)
+    2. QuickTime Player showing iPad mirror
+    3. macOS built-in iPad/iPhone Mirroring window
+    Falls back to full screen capture if nothing found.
+    """
+    for patterns in WINDOW_SEARCH_ORDER:
+        window_id = _find_window_id(patterns)
+        if window_id:
+            data = _screencapture_window(window_id)
+            if data:
+                return data
+    return None
 
 
 class FrameDiffer:

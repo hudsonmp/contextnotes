@@ -36,6 +36,7 @@ def cmd_start(args):
         notebook_name=args.notebook,
         capture_interval=args.interval,
         output_dir=args.output_dir,
+        capture_mode=args.mode,
     )
 
     # Graceful shutdown on Ctrl+C
@@ -150,6 +151,8 @@ def main():
     p_start.add_argument("--interval", type=float, default=3.0, help="Capture interval in seconds")
     p_start.add_argument("--duration", type=float, help="Max session duration in seconds")
     p_start.add_argument("--output-dir", help="Save screenshots to this directory")
+    p_start.add_argument("--mode", choices=["screen", "icloud", "none"],
+                         help="Capture mode (auto-detected if omitted)")
     p_start.set_defaults(func=cmd_start)
 
     # analyze

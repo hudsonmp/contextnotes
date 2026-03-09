@@ -1,11 +1,18 @@
 """Session coordinator: orchestrates all capture streams.
 
 Manages the lifecycle of a reading + annotation session:
-1. Starts/stops GoodNotes screen capture
+1. Starts/stops GoodNotes capture (screen mirror OR iCloud OCR polling)
 2. Polls Chrome reading context (via MCP)
 3. Collects gaze/scroll data
 4. Triggers context-aware OCR on new ink
 5. Stores everything to Supabase
+
+Capture mode auto-detection:
+  - If a GoodNotes/QuickTime/iPad mirror window is visible on Mac:
+    uses screen capture + frame diff (3s interval, real-time)
+  - If a notebook_name is provided and no mirror window found:
+    uses iCloud OCR polling (15s interval, near-real-time)
+  - Both paths produce annotation events in the same format.
 """
 
 from __future__ import annotations
@@ -24,15 +31,20 @@ from trace.models import (
     Session, Event, EventType, ReadingSource, Annotation,
     GazeSample, ScreenCapture, InkRegion, Viewport,
     VisibleParagraph, TextQuoteSelector, SessionStatus,
-    ContentType, Motivation,
+    ContentType, Motivation, AbbreviationExpansion,
 )
 from trace.store import TraceStore
-from capture.goodnotes_screen_capture import GoodNotesCaptureLoop
+from capture.goodnotes_screen_capture import GoodNotesCaptureLoop, capture_goodnotes_window
 from recognition.context_corrector import ContextCorrector, RecognitionResult
 
 
 class SessionCoordinator:
-    """Orchestrates a complete reading + annotation capture session."""
+    """Orchestrates a complete reading + annotation capture session.
+
+    Automatically selects the best capture mode:
+    - 'screen': GoodNotes window visible on Mac (native or iPad mirror)
+    - 'icloud': GoodNotes on iPad, polling via iCloud OCR
+    """
 
     def __init__(
         self,
@@ -40,10 +52,13 @@ class SessionCoordinator:
         article_title: Optional[str] = None,
         notebook_name: Optional[str] = None,
         capture_interval: float = 3.0,
+        icloud_poll_interval: float = 15.0,
         output_dir: Optional[str] = None,
+        capture_mode: Optional[str] = None,
     ):
         self.store = TraceStore()
         self.corrector = ContextCorrector()
+        self.notebook_name = notebook_name
 
         # Create session
         self.session = Session(
@@ -54,12 +69,28 @@ class SessionCoordinator:
         )
         self.store.create_session(self.session)
 
-        # GoodNotes capture
-        self.gn_capture = GoodNotesCaptureLoop(
-            session_id=self.session.id,
-            interval=capture_interval,
-            output_dir=output_dir,
-        )
+        # Auto-detect capture mode
+        self.capture_mode = capture_mode or self._detect_capture_mode()
+
+        if self.capture_mode == "screen":
+            self.gn_capture = GoodNotesCaptureLoop(
+                session_id=self.session.id,
+                interval=capture_interval,
+                output_dir=output_dir,
+            )
+            self.icloud_capture = None
+        elif self.capture_mode == "icloud":
+            self.gn_capture = None
+            from capture.goodnotes_icloud_capture import GoodNotesICloudCapture
+            self.icloud_capture = GoodNotesICloudCapture(
+                notebook_name=notebook_name,
+                session_id=self.session.id,
+                poll_interval=icloud_poll_interval,
+            )
+        else:
+            # No capture available — session will still record reading context
+            self.gn_capture = None
+            self.icloud_capture = None
 
         # State
         self.latest_reading_context: Optional[dict] = None
@@ -68,6 +99,28 @@ class SessionCoordinator:
 
         # Emit session start event
         self._emit_event(EventType.session_start)
+
+    def _detect_capture_mode(self) -> str:
+        """Auto-detect the best capture mode."""
+        # Try screen capture first (GoodNotes on Mac or iPad mirror)
+        if capture_goodnotes_window() is not None:
+            return "screen"
+
+        # Try iCloud if a notebook name was provided
+        if self.notebook_name:
+            try:
+                from capture.goodnotes_icloud_capture import GoodNotesICloudCapture
+                # Just test that the notebook exists
+                GoodNotesICloudCapture(
+                    notebook_name=self.notebook_name,
+                    session_id="detect-test",
+                    poll_interval=999,
+                )
+                return "icloud"
+            except (ValueError, ImportError):
+                pass
+
+        return "none"
 
     def update_reading_context(self, context: dict):
         """Update the current reading context from Chrome.
@@ -96,8 +149,9 @@ class SessionCoordinator:
             scroll_y=scroll_y,
             scroll_progress=scroll_progress,
         )
-        # Buffer and batch-insert (TODO: add buffering)
         self.store.insert_gaze_batch([sample])
+
+    # --- Screen capture callback (Path A) ---
 
     def _on_new_ink(self, frame_dict: dict, image_bytes: bytes):
         """Callback when GoodNotes frame diff detects new ink.
@@ -127,26 +181,65 @@ class SessionCoordinator:
         # Build article context from latest reading state
         article_context = self._get_article_context()
 
-        # Run context-aware OCR
-        # TODO: also get raw OCR from GoodNotes MCP for consensus check
+        # Run context-aware OCR via Claude Vision
         result = self.corrector.recognize(
             image_bytes=image_bytes,
-            raw_ocr=None,  # Will be filled by GoodNotes MCP OCR
+            raw_ocr=None,
             article_context=article_context,
         )
 
-        # Build annotation
+        self._store_annotation(result, screenshot_url=screenshot_url)
+
+    # --- iCloud OCR callback (Path B) ---
+
+    def _on_icloud_change(self, change: dict):
+        """Callback when iCloud OCR polling detects new text.
+
+        The change dict has raw OCR text from Apple Vision.
+        We still send it through context correction for abbreviation
+        expansion and motivation classification.
+        """
+        raw_ocr = change["new_text"]
+        article_context = self._get_article_context()
+
+        # Use context corrector for abbreviation expansion + classification
+        # but pass the raw OCR text (no image — we don't have a screenshot)
+        result = self.corrector.recognize(
+            image_bytes=b"",  # No image in iCloud mode
+            raw_ocr=raw_ocr,
+            article_context=article_context,
+            media_type="text/plain",
+        )
+
+        self._store_annotation(
+            result,
+            raw_ocr=raw_ocr,
+            goodnotes_page=change.get("page"),
+        )
+
+    def _store_annotation(
+        self,
+        result: RecognitionResult,
+        screenshot_url: Optional[str] = None,
+        raw_ocr: Optional[str] = None,
+        goodnotes_page: Optional[int] = None,
+    ):
+        """Store a recognized annotation as an event."""
         annotation = Annotation(
-            raw_ocr=None,
+            raw_ocr=raw_ocr,
             context_corrected=result.corrected_text,
             confidence=result.confidence,
             content_type=ContentType(result.content_type) if result.content_type in ContentType.__members__ else ContentType.text,
-            goodnotes_page=None,
+            goodnotes_page=goodnotes_page,
             screenshot_ref=screenshot_url,
             motivation=Motivation(result.motivation) if result.motivation in Motivation.__members__ else None,
             diagram_description=result.diagram_description,
             abbreviations_expanded=[
-                {"original": a["original"], "expanded": a["expanded"], "confidence": a["confidence"]}
+                AbbreviationExpansion(
+                    original=a["original"],
+                    expanded=a["expanded"],
+                    confidence=a["confidence"],
+                )
                 for a in result.abbreviations
             ] if result.abbreviations else [],
         )
@@ -261,24 +354,43 @@ class SessionCoordinator:
         """
         self.running = True
 
-        # Start GoodNotes capture in a background thread
-        gn_thread = threading.Thread(
-            target=self.gn_capture.run,
-            kwargs={"duration": duration, "on_diff": self._on_new_ink},
-            daemon=True,
-        )
-        gn_thread.start()
-        self._threads.append(gn_thread)
+        if self.capture_mode == "screen":
+            gn_thread = threading.Thread(
+                target=self.gn_capture.run,
+                kwargs={"duration": duration, "on_diff": self._on_new_ink},
+                daemon=True,
+            )
+            gn_thread.start()
+            self._threads.append(gn_thread)
+            print(f"Capture mode: SCREEN (every {self.gn_capture.interval}s)")
+
+        elif self.capture_mode == "icloud":
+            icloud_thread = threading.Thread(
+                target=self.icloud_capture.run,
+                kwargs={"duration": duration, "on_change": self._on_icloud_change},
+                daemon=True,
+            )
+            icloud_thread.start()
+            self._threads.append(icloud_thread)
+            print(f"Capture mode: iCLOUD ({self.icloud_capture.mode}, every {self.icloud_capture.poll_interval}s)")
+            print(f"Notebook: {self.icloud_capture.notebook['name']} ({self.icloud_capture.total_pages} page(s))")
+
+        else:
+            print("Capture mode: NONE (no GoodNotes window or notebook found)")
+            print("Reading context will still be captured from Chrome.")
 
         print(f"Session started: {self.session.id}")
         print(f"Article: {self.session.article_url}")
-        print(f"GoodNotes capture: every {self.gn_capture.interval}s")
         print("Waiting for reading context updates and new ink...")
 
     def stop(self):
         """Stop all capture streams and finalize session."""
         self.running = False
-        self.gn_capture.stop()
+
+        if self.gn_capture:
+            self.gn_capture.stop()
+        if self.icloud_capture:
+            self.icloud_capture.stop()
 
         # Wait for threads
         for t in self._threads:
@@ -289,6 +401,9 @@ class SessionCoordinator:
         self.store.end_session(self.session.id)
 
         print(f"\nSession ended: {self.session.id}")
-        print(f"Total captures: {len(self.gn_capture.captures)}")
-        diffs = sum(1 for c in self.gn_capture.captures if c.get("diff_detected"))
-        print(f"Ink changes detected: {diffs}")
+        if self.gn_capture:
+            print(f"Total captures: {len(self.gn_capture.captures)}")
+            diffs = sum(1 for c in self.gn_capture.captures if c.get("diff_detected"))
+            print(f"Ink changes detected: {diffs}")
+        if self.icloud_capture:
+            print(f"iCloud polls: {self.icloud_capture.poll_count}")
