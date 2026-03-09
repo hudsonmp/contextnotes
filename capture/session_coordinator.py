@@ -35,6 +35,7 @@ from trace.models import (
 )
 from trace.store import TraceStore
 from capture.goodnotes_screen_capture import GoodNotesCaptureLoop, capture_goodnotes_window
+from capture.chrome_reading_loop import ChromeReadingLoop, get_active_tab_info
 from recognition.context_corrector import ContextCorrector, RecognitionResult
 
 
@@ -91,6 +92,9 @@ class SessionCoordinator:
             # No capture available — session will still record reading context
             self.gn_capture = None
             self.icloud_capture = None
+
+        # Chrome reading loop
+        self.chrome_loop = ChromeReadingLoop(interval=5.0)
 
         # State
         self.latest_reading_context: Optional[dict] = None
@@ -354,6 +358,19 @@ class SessionCoordinator:
         """
         self.running = True
 
+        # Start Chrome reading context loop
+        chrome_thread = threading.Thread(
+            target=self.chrome_loop.run,
+            kwargs={
+                "on_context": self.update_reading_context,
+                "duration": duration,
+            },
+            daemon=True,
+        )
+        chrome_thread.start()
+        self._threads.append(chrome_thread)
+
+        # Start GoodNotes capture
         if self.capture_mode == "screen":
             gn_thread = threading.Thread(
                 target=self.gn_capture.run,
@@ -362,7 +379,7 @@ class SessionCoordinator:
             )
             gn_thread.start()
             self._threads.append(gn_thread)
-            print(f"Capture mode: SCREEN (every {self.gn_capture.interval}s)")
+            print(f"  Notes:   SCREEN capture (every {self.gn_capture.interval}s)")
 
         elif self.capture_mode == "icloud":
             icloud_thread = threading.Thread(
@@ -372,21 +389,22 @@ class SessionCoordinator:
             )
             icloud_thread.start()
             self._threads.append(icloud_thread)
-            print(f"Capture mode: iCLOUD ({self.icloud_capture.mode}, every {self.icloud_capture.poll_interval}s)")
-            print(f"Notebook: {self.icloud_capture.notebook['name']} ({self.icloud_capture.total_pages} page(s))")
+            print(f"  Notes:   iCLOUD OCR ({self.icloud_capture.mode}, every {self.icloud_capture.poll_interval}s)")
+            print(f"  Notebook: {self.icloud_capture.notebook['name']} ({self.icloud_capture.total_pages} page(s))")
 
         else:
-            print("Capture mode: NONE (no GoodNotes window or notebook found)")
-            print("Reading context will still be captured from Chrome.")
+            print("  Notes:   NONE (no GoodNotes window or notebook found)")
 
-        print(f"Session started: {self.session.id}")
-        print(f"Article: {self.session.article_url}")
-        print("Waiting for reading context updates and new ink...")
+        print(f"  Reading: Chrome active tab (every {self.chrome_loop.interval}s)")
+        print(f"  Session: {self.session.id}")
+        print(f"  Article: {self.session.article_url}")
+        print("\nCapturing... (Ctrl+C to stop)")
 
     def stop(self):
         """Stop all capture streams and finalize session."""
         self.running = False
 
+        self.chrome_loop.stop()
         if self.gn_capture:
             self.gn_capture.stop()
         if self.icloud_capture:
